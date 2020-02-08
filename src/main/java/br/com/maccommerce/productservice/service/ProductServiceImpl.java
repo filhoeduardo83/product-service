@@ -3,8 +3,6 @@ package br.com.maccommerce.productservice.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,18 +10,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.maccommerce.productservice.entity.Product;
 import br.com.maccommerce.productservice.repository.ProductRepository;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 @Service
 public class ProductServiceImpl implements ProductService{
 
-	Logger logger =  LoggerFactory.getLogger(this.getClass());
-
-	
 	@Autowired
 	private final ProductRepository productRepository;
 	
-
-
 	public ProductServiceImpl(ProductRepository productRepository) {
 		super();
 		this.productRepository = productRepository;
@@ -58,7 +53,7 @@ public class ProductServiceImpl implements ProductService{
 		Optional<Product> product = productRepository.findById(id);
 		
 		if(!product.isPresent()) {
-			logger.info("Produto não encontrado");
+			log.info("Produto não encontrado");
 		}
 		
 		return product;
@@ -74,8 +69,13 @@ public class ProductServiceImpl implements ProductService{
 	@Override
 	public List<Product> findAll(){
 		
+		log.info("Consultando produtos cadastrados");
+
 		List<Product> productList = productRepository.findAll();
-		logger.info("Consultando produtos cadastrados");
+		
+		if(productList.isEmpty()) {
+			log.info("Nenhum produto cadastrado");
+		}
 
 		return productList;
 	}
